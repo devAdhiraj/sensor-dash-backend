@@ -14,22 +14,25 @@ app.use("/api", express.json());
 app.use("/api/sensors", sensorsRouter);
 
 try {
-  console.log("about to connect");
+
   mongoose.connect(uri, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
   });
-  console.log("done with this");
+
 } catch (err) {
   console.log("Err:", err);
 }
 const connection = mongoose.connection;
-console.log(connection);
+
 connection.once("open", () => {
   console.log("MongoDB connection established successfully!");
 });
 
+app.get("*", (req, res) => {
+res.status(404).send("<h1>Invalid Api Route</h1><p>Try out /api/sensors</p>");
+});
 app.listen(port, () => {
   console.log(`App is listening on port ${port}`);
 });
