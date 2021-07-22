@@ -24,25 +24,28 @@ const fetchData = async (req, res) => {
     res.status(200).json(data || "no data");
   } catch (err) {
     console.log("Error:", err);
-    res.status(400).json("An Error has occured.");
+    res.status(400).json("Error - find query failed");
   }
 };
 
 const fetchOne = async (req, res) => {
-  try {
-    if (req.params.id === "last") {
+  if (req.params.id === "last") {
+    try {
       const data = await SensorsData.find()
         .sort({ updatedAt: -1 })
         .limit(1)
         .exec();
-
       res.status(200).json(data[0] || "no data");
-    } else {
+    } catch (err) {
+      res.status(400).json("error - .find() query failed");
+    }
+  } else {
+    try {
       const data = await SensorsData.findById(req.params.id);
       res.status(200).json(data || "no data");
+    } catch (err) {
+      res.status(400).json("Error - findById failed");
     }
-  } catch (err) {
-    res.status(400).json("error");
   }
 };
 

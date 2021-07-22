@@ -29,6 +29,4 @@ router.post("/add", addData);
  */
 router.delete("/:id", delData);
 
-
-
 module.exports = router;
