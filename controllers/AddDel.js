@@ -23,6 +23,10 @@ const addData = async (req, res) => {
 };
 
 const delData = async (req, res) => {
+  const key = req.headers["x-adsecretapikey"];
+  if (!key || key != process.env.ADSECRETAPIKEY) {
+    return res.status(401).send("Unauthorized");
+  }
   try {
     let delItems = req.body;
     if (!delItems) {
