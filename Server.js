@@ -2,7 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const sensorsRouter = require("./routes/Sensors");
-const infoRouter = require("./routes/Info");
 require("dotenv").config();
 
 const app = express();
@@ -13,7 +12,7 @@ app.use(cors());
 app.use("/api", express.urlencoded({ extended: false }));
 app.use("/api", express.json());
 app.use("/api/sensors", sensorsRouter);
-app.use("/api/info", infoRouter);
+
 mongoose
   .connect(uri, {
     useNewUrlParser: true,

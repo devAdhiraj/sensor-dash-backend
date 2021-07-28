@@ -8,6 +8,7 @@ const { addData, delData } = require("../controllers/AddDel");
  * sort (time | tempx | humidx | lightx) - data will be sorted based on given value
  * x = 0 or 1 --> temp0 - oldest first | temp1 - newest first
  * limit - limits number of entries in response
+ * skip - skips specified number of elements
  * */
 router.get("/", fetchData);
 
@@ -24,9 +25,9 @@ router.get("/:id", fetchOne);
 router.post("/add", addData);
 
 /**
- * Deletes entry (collection) with specified id or
- * if id param === last then deletes latest entry
+ * Accepts array of ids and deletes all items
+ * in array.
  */
-router.delete("/:id", delData);
+router.delete("/", delData);
 
 module.exports = router;

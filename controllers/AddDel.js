@@ -1,39 +1,49 @@
 const SensorsData = require("../models/Sensors.model");
 
 const addData = async (req, res) => {
-  const data = req.body;
+  const key = req.headers["x-adsecretapikey"];
+  if (!key || key != process.env.ADSECRETAPIKEY) {
+    return res.status(401).send("Unauthorized");
+  }
+  const { temp, humid, light } = req.body;
+  if (!temp || !humid || !light) {
+    return res.status(400).send("undefined fields");
+  }
   try {
     const SensorEntry = new SensorsData({
-      temp: data.temp,
-      humid: data.humid,
-      light: data.light,
+      temp: temp,
+      humid: humid,
+      light: light,
     });
     await SensorEntry.save();
-    res.status(200).json("s"); // s = success
+    return res.status(200).json("s"); // s = success
   } catch (err) {
-    res.status(400).json("f"); // f = failed
+    return res.status(400).json("f"); // f = failed
   }
 };
 
 const delData = async (req, res) => {
-  if (req.params.id === "last") {
-    try {
-      await SensorsData.findOneAndDelete(
-        {},
-        { sort: { updatedAt: -1 }, limit: 1 }
-      );
-    } catch (err) {
-      res.status(400).json("Error - findOneAndDelete failed.\n", err);
-      console.log(err);
+  try {
+    let delItems = req.body;
+    if (!delItems) {
+      return res.status(204).send("No items to delete");
     }
-  } else {
-    try {
-      await SensorsData.findByIdAndDelete(req.params.id);
-      res.status(200).json("deleted");
-    } catch (err) {
-      console.log(err);
-      res.status(400).json("Error - findByIdAndDelete failed.\n");
-    }
+    SensorsData.deleteMany(
+      {
+        _id: {
+          $in: delItems,
+        },
+      },
+      (err, result) => {
+        if (err) {
+          res.status(400).send("Error deleting");
+        } else {
+          res.status(200).send("Success");
+        }
+      }
+    );
+  } catch (err) {
+    res.status(400).send("Request Error");
   }
 };
 

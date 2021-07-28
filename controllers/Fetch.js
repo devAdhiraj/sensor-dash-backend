@@ -2,7 +2,7 @@ const SensorsData = require("../models/Sensors.model");
 
 const fetchData = async (req, res) => {
   try {
-    const { select, sort, limit } = req.query;
+    const { select, sort, limit, skip } = req.query;
     const query = SensorsData.find();
     if (select) {
       let temp = select.split(",");
@@ -15,6 +15,9 @@ const fetchData = async (req, res) => {
       let paramObj = {};
       paramObj[sort.substring(0, sliceIndex)] = order;
       query.sort(paramObj);
+    }
+    if (skip) {
+      query.skip(Number(skip));
     }
     if (limit) {
       query.limit(Number(limit));
