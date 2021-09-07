@@ -2,12 +2,30 @@ const SensorsData = require("../models/Sensors.model");
 
 const fetchData = async (req, res) => {
   try {
-    const { select, sort, limit, skip } = req.query;
+    const { select, sort, limit, skip, rangeStart, rangeEnd } = req.query;
     const query = SensorsData.find();
     if (select) {
       let temp = select.split(",");
       //   console.log(temp);
       query.select(temp);
+    }
+    if(rangeStart){
+      try{
+        let queryStart = new Date(rangeStart).toISOString()
+        query.where("updatedAt").gte(queryStart)
+      }
+      catch(err){
+        res.status(400).json("Invalid date format")
+      }
+    }
+    if(rangeEnd){
+      try{
+        let queryEnd = new Date(rangeEnd).toISOString()
+        query.where("updatedAt").lte(queryEnd)
+      }
+      catch(err){
+        res.status(400).json("Invalid date format")
+      }
     }
     if (sort) {
       const sliceIndex = sort.length - 1;
