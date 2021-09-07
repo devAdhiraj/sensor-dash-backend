@@ -1,5 +1,6 @@
 const SensorsData = require("../models/Sensors.model");
 
+
 const fetchData = async (req, res) => {
   try {
     const { select, sort, limit, skip, rangeStart, rangeEnd } = req.query;

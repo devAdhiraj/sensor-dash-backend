@@ -1,9 +1,16 @@
 const SensorsData = require("../models/Sensors.model");
-
+const {
+createHash,
+} = require('crypto');
 const addData = async (req, res) => {
-  const key = req.headers["x-adsecretapikey"];
-  if (!key || key != process.env.ADSECRETAPIKEY) {
-    return res.status(401).send("Unauthorized");
+  try{
+    const key = req.headers["x-adsecretapikey"];
+    if (!key || createHash('sha256').update(key).digest('hex') != process.env.ADSECRETAPIKEY) {
+      return res.status(401).send("Unauthorized");
+    }
+  }
+  catch(err){
+    return res.status(401).send("Unauthorized")
   }
   const { temp, humid, light } = req.body;
   if (!temp || !humid || !light) {
