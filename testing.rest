@@ -1,0 +1,25 @@
+GET http://localhost:5000/api/sensors
+
+
+###
+
+POST http://localhost:5000/api/sensors/add
+Content-Type: application/json
+
+{
+    "temp": "20",
+    "humid": "50",
+    "light": "100",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ12VyIjoiYWRoaXJhal9zaW5naDE1IiwiZXhwIjoxNjM5OTYzODI1LCJpYXQiOjE2Mzk5NjE0MjV9.rYoJWF2BOwsIS6OjdQ8uPDkaJrvwTJ-q-_PcQ-gyt5E"
+}
+
+###
+
+POST http://localhost:5000/api/sensors/admin-login
+Content-Type: application/json
+
+{
+    "username": "adhiraj_singh15",
+    "password": "sEcReTaDmIn",
+}
+

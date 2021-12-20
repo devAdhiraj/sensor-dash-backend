@@ -1,43 +1,63 @@
 const SensorsData = require("../models/Sensors.model");
-const {
-createHash,
-} = require('crypto');
+const jwt = require("jsonwebtoken");
+const { createHash } = require('crypto');
+
 const addData = async (req, res) => {
   try{
     const key = req.headers["x-adsecretapikey"];
-    if (!key || createHash('sha256').update(key).digest('hex') != process.env.ADSECRETAPIKEY) {
-      return res.status(401).send("Unauthorized");
+    if (!key || createHash('sha256').update(key).digest('hex') !== process.env.ADSECRETAPIKEY) {
+      const {token} = req.body;
+      try{
+        jwt.verify(token, process.env.JWT_SECRET_KEY);
+      }
+      catch(err){
+        return res.status(401).json("Unauthorized")
+      }
     }
+  } catch(err){
+    res.status(401).json("Unauthorized.")
   }
-  catch(err){
-    return res.status(401).send("Unauthorized")
-  }
-  const { temp, humid, light } = req.body;
-  if (!temp || !humid || !light) {
-    return res.status(400).send("undefined fields");
-  }
-  try {
-    const SensorEntry = new SensorsData({
-      temp: temp,
-      humid: humid,
-      light: light,
-    });
-    await SensorEntry.save();
-    return res.status(200).json("s"); // s = success
-  } catch (err) {
-    return res.status(400).json("f"); // f = failed
+
+  try{
+      const { temp, humid, light } = req.body;
+      if (!temp || !humid || !light) {
+        return res.status(400).json("undefined fields");
+      }
+      try {
+        const SensorEntry = new SensorsData({
+          temp: temp,
+          humid: humid,
+          light: light,
+        });
+        await SensorEntry.save();
+        return res.status(200).json("s"); // s = success
+      } catch (err) {
+        return res.status(400).json("f"); // f = failed
+      }
+  } catch(err){
+    return res.status(400).json("Request Error");
   }
 };
 
 const delData = async (req, res) => {
-  const key = req.headers["x-adsecretapikey"];
-  if (!key || key != process.env.ADSECRETAPIKEY) {
-    return res.status(401).send("Unauthorized");
+  try{
+    const key = req.headers["x-adsecretapikey"];
+    if (!key || createHash('sha256').update(key).digest('hex') !== process.env.ADSECRETAPIKEY) {
+      const {token} = req.body;
+      try{
+        jwt.verify(token, process.env.JWT_SECRET_KEY);
+      }
+      catch(err){
+        return res.status(401).json("Unauthorized")
+      }
+    }
+  } catch(err){
+    res.status(401).json("Unauthorized.")
   }
   try {
     let delItems = req.body;
     if (!delItems) {
-      return res.status(204).send("No items to delete");
+      return res.status(204).json("No items to delete");
     }
     SensorsData.deleteMany(
       {
@@ -47,14 +67,14 @@ const delData = async (req, res) => {
       },
       (err, result) => {
         if (err) {
-          res.status(400).send("Error deleting");
+          res.status(400).json("Error deleting");
         } else {
-          res.status(200).send("Success");
+          res.status(200).json("Success");
         }
       }
     );
   } catch (err) {
-    res.status(400).send("Request Error");
+    res.status(400).json("Request Error");
   }
 };
 

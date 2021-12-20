@@ -12,6 +12,13 @@ app.use(cors());
 app.use("/api", express.urlencoded({ extended: false }));
 app.use("/api", express.json());
 app.use("/api/sensors", sensorsRouter);
+app.use((err, req, res, next) => {
+  if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+      console.error(err);
+      return res.status(400).send({ status: 404, message: err.message }); // Bad request
+  }
+  next();
+});
 
 mongoose
   .connect(uri, {
