@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const { fetchData, fetchOne } = require("../controllers/Fetch");
 const { addData, delData } = require("../controllers/AddDel");
-const { login } = require("../controllers/AdminAuth");
+const { login, logout } = require("../controllers/AdminAuth");
 /* *                 ----Allowed Query Params----
  * empty - all data in DB will be included in response
  * select - fields that will be included in response
@@ -35,9 +35,16 @@ router.post("/add", addData);
 router.delete("/", delData);
 
 /**
- * 
+ * This route requires admin username and password credentials
+ * to authenticate the admin user. It returns a token which stays valid 
+ * for 40 mins after which user needs to login again  
  */
 router.post("/admin-login", login);
+
+/**
+ * Simply deletes the jwt token cookie to logout user.
+ */
+router.post("/admin-logout", logout);
 
 
 module.exports = router;
