@@ -5,19 +5,12 @@ const { createHash } = require('crypto');
 const addData = async (req, res) => {
   try{
     const key = req.headers["x-adsecretapikey"];
-    if (!key || createHash('sha256').update(key).digest('hex') !== process.env.ADSECRETAPIKEY) {
-      const {token} = req.body;
-      try{
-        jwt.verify(token, process.env.JWT_SECRET_KEY);
-      }
-      catch(err){
+    if ( (!key || createHash('sha256').update(key).digest('hex') !== process.env.ADSECRETAPIKEY) && !req.authenticated) {
         return res.status(401).json("Unauthorized")
-      }
     }
   } catch(err){
     res.status(401).json("Unauthorized.")
   }
-
   try{
       const { temp, humid, light } = req.body;
       if (!temp || !humid || !light) {
@@ -42,14 +35,8 @@ const addData = async (req, res) => {
 const delData = async (req, res) => {
   try{
     const key = req.headers["x-adsecretapikey"];
-    if (!key || createHash('sha256').update(key).digest('hex') !== process.env.ADSECRETAPIKEY) {
-      const {token} = req.body;
-      try{
-        jwt.verify(token, process.env.JWT_SECRET_KEY);
-      }
-      catch(err){
+    if ( (!key || createHash('sha256').update(key).digest('hex') !== process.env.ADSECRETAPIKEY) && !req.authenticated) {
         return res.status(401).json("Unauthorized")
-      }
     }
   } catch(err){
     res.status(401).json("Unauthorized.")

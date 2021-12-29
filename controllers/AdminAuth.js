@@ -1,6 +1,5 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
 const login = async (req, res) => {
     try{
         const {username, password } = req.body;
@@ -11,10 +10,24 @@ const login = async (req, res) => {
         if(username.toLowerCase() !== process.env.ADMIN_USER || !bcrypt.compareSync(password, process.env.ADMIN_PASS)){
             return res.status(403).json("Unauthorized.");
         }   
-        return res.status(200).json(jwt.sign({user: username, exp: Math.floor(Date.now() / 1000) + (40 * 60)}, process.env.JWT_SECRET_KEY));
+        const expires = (Math.floor(Date.now() / 1000) + (40 * 60));
+        const token = jwt.sign({user: username, exp: expires}, process.env.JWT_SECRET_KEY);
+        res.cookie("token", token, { httpOnly: true, maxAge: 2400000});
+        return res.status(200).json({ token });
     } catch(err){
         return res.status(400).json("An error occured.");
     }
 }
 
-module.exports = { login }
+const logout = async (req, res) => {
+    try {
+    res.clearCookie("token")
+    return res.status(200).send("deleted");
+} catch(err){
+        return res.status(400);
+    }
+}
+
+module.exports = { login, logout }
+
+// verify token middleware - use for each req that looks for cookie token and verifies it
