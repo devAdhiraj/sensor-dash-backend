@@ -12,8 +12,6 @@ const port = process.env.PORT || 5000;
 const uri = process.env.ATLAS_URI;
 app.use((req, res, next) => {
   if (process.env.NODE_ENV === 'production') {
-      if (req.headers.host === 'your-app.herokuapp.com')
-          return res.redirect(301, 'https://www.your-custom-domain.com');
       if (req.headers['x-forwarded-proto'] !== 'https')
           return res.redirect('https://' + req.headers.host + req.url);
       else
