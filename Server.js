@@ -12,7 +12,7 @@ const port = process.env.PORT || 5000;
 const uri = process.env.ATLAS_URI;
 
 app.use((req, res, next) => {
-    if (process.env.NODE_ENV === 'production' && req.protocol !== "https" && req.method === "GET") {
+    if (process.env.NODE_ENV === 'production' && req.get('X-Forwarded-Proto') !== "https" && req.method === "GET") {
       return res.redirect('https://' + req.get('host') + req.url);
     }
     return next();
