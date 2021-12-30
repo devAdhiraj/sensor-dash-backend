@@ -10,14 +10,16 @@ require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 5000;
 const uri = process.env.ATLAS_URI;
+
 app.use((req, res, next) => {
+  console.log("proto ===", req.get('x-forwarded-proto'));
+  console.log(req.method === "GET")
   if (process.env.NODE_ENV === 'production') {
-      if (req.headers.host === 'your-app.herokuapp.com')
-          return res.redirect(301, 'https://www.your-custom-domain.com');
-      if (req.headers['x-forwarded-proto'] !== 'https')
-          return res.redirect('https://' + req.headers.host + req.url);
-      else
-          return next();
+    if (!req.secure && req.method === "GET") {
+      res.redirect('https://' + req.get('host') + req.url);
+    } else {
+        next();     
+    }
   } else
       return next();
 });
