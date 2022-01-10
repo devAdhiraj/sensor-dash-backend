@@ -1,12 +1,13 @@
 # sensor-dash-backend
 
-This is an API used to access, add, and delete the sensor data stored in a MongoDB Database.
-The API is hosted on [https://ad-sensor-dash.herokuapp.com](https://ad-sensor-dash.herokuapp.com). 
+This is an API used to access, add, and delete the sensor data stored in a MongoDB Database.\
+The API is hosted on [https://ad-sensor-dash.herokuapp.com](https://ad-sensor-dash.herokuapp.com). \
 
-Repository for frontend React App: [https://github.com/devAdhiraj/sensor-dash-frontend](https://github.com/devAdhiraj/sensor-dash-frontend)
+Git Repo for device code: [https://github.com/devAdhiraj/sensor-dash-device-code](https://github.com/devAdhiraj/sensor-dash-device-code)\
+Git Repo for frontend React App: [https://github.com/devAdhiraj/sensor-dash-frontend](https://github.com/devAdhiraj/sensor-dash-frontend)\
 
 ## Accessing Data
-GET Request
+GET Request\
 Data can be accessed by anyone using the /api/sensors route. This will send all the sensor data entries
 in json. 
 This route also allows for querying.
