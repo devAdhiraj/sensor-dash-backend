@@ -40,6 +40,6 @@ The admin can login by providing credentials (username and password) as payload 
 If credentials are valid, the user will get a jwt token in response that will stay valid for 40 mins after which they will
 be required to log in again. The jwt access token can be used to add and delete data.
 
-![image](https://user-images.githubusercontent.com/75645547/148711800-e9807fc2-c40e-4524-9015-29330bacdc12.png)
+<img src="https://user-images.githubusercontent.com/75645547/148711800-e9807fc2-c40e-4524-9015-29330bacdc12.png" height=300>
 
-![image](https://user-images.githubusercontent.com/75645547/148711836-060628ac-203e-4b19-bd98-c7a21066adf3.png)
+<img src="https://user-images.githubusercontent.com/75645547/148711836-060628ac-203e-4b19-bd98-c7a21066adf3.png" height=300>
